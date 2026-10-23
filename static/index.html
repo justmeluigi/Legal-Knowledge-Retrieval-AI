@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal Knowledge Retrieval AI — Grounded Legal RAG</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="ambient-glow"></div>
+
+  <div class="app-shell">
+    <!-- Apple-Style Navigation Bar -->
+    <header class="navbar">
+      <div class="navbar-inner">
+        <div class="brand-group">
+          <div class="brand-mark">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+          </div>
+          <div class="brand-titles">
+            <span class="brand-name">Legal Knowledge Retrieval AI</span>
+            <span class="brand-tagline">Grounded RAG • RBAC Security • Evidence-Based Abstention</span>
+          </div>
+        </div>
+
+        <div class="navbar-center">
+          <div class="engine-indicator">
+            <span class="pulse-dot"></span>
+            <span class="engine-label" id="providerStatusBadge">Qwen 3.5 2B • ChromaDB Active</span>
+          </div>
+        </div>
+
+        <div class="navbar-actions">
+          <button class="nav-pill-btn" onclick="toggleCorpusModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            Indexed Corpus (5 Docs)
+          </button>
+          <a href="/docs" target="_blank" class="nav-link-btn">API Docs</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <main class="main-container">
+      <!-- Top Section: RBAC Security Personas -->
+      <section class="persona-section">
+        <div class="section-meta-row">
+          <div>
+            <h2 class="section-title">Access Control & Security Clearance (RBAC)</h2>
+            <p class="section-subtitle">Select an identity profile to test role-based vector retrieval filtering and data segregation.</p>
+          </div>
+          <div class="clearance-tag-deck" id="activeClearancesDeck">
+            <!-- Active clearance badges dynamically rendered -->
+          </div>
+        </div>
+
+        <div class="persona-grid" id="personaDeck">
+          <!-- Personas dynamically populated -->
+        </div>
+      </section>
+
+      <!-- Center Query Console -->
+      <section class="query-section">
+        <div class="apple-card query-card">
+          <div class="query-input-wrap">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="queryInput" 
+              class="query-text-input" 
+              placeholder="Ask any legal, compliance, contract, or policy question..."
+              onkeydown="handleQueryKey(event)"
+            />
+            <button id="submitQueryBtn" class="query-cta-btn" onclick="submitQuery()">
+              <span class="btn-caption">Ask Legal AI</span>
+              <span class="spinner hidden" id="querySpinner"></span>
+            </button>
+          </div>
+
+          <!-- Quick Test Inquiries -->
+          <div class="preset-strip">
+            <span class="preset-label">Test Scenarios:</span>
+            <button class="preset-chip" onclick="applyPreset(1)">
+              <span class="preset-level tag-public">Public</span>
+              Gift Value Limit ($50)
+            </button>
+            <button class="preset-chip" onclick="applyPreset(2)">
+              <span class="preset-level tag-internal">Internal</span>
+              Travel Meals Per Diem ($85)
+            </button>
+            <button class="preset-chip" onclick="applyPreset(3)">
+              <span class="preset-level tag-legal">Legal</span>
+              DPA 48-Hour Incident Notice
+            </button>
+            <button class="preset-chip chip-highlight" onclick="applyPreset(4)">
+              <span class="preset-level tag-exec">Top Secret</span>
+              Project Titan $4.5M Golden Parachute
+            </button>
+            <button class="preset-chip" onclick="applyPreset(5)">
+              <span class="preset-level tag-abstain">Abstain</span>
+              Spaceship Repair Policy
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Area -->
+      <section id="resultsSection" class="results-section hidden">
+        <!-- Result Header Banner -->
+        <div class="result-banner-card" id="resultBannerCard">
+          <div class="banner-top-row">
+            <div class="status-indicator-group">
+              <span class="status-badge" id="resStatusBadge">ANSWERED</span>
+              <span class="evidence-strength-badge" id="resEvidenceBadge">STRONG EVIDENCE</span>
+            </div>
+            <div class="banner-meta-items">
+              <span class="meta-item-tag" id="resUserPersonaTag">Executive Clearance</span>
+              <span class="meta-item-tag" id="resRetrievedCountTag">4 Passages Searched</span>
+              <span class="meta-item-tag" id="resElapsedTag">0.45s</span>
+            </div>
+          </div>
+
+          <!-- Synthesized Grounded Answer -->
+          <div class="answer-box">
+            <h3 class="answer-headline">Synthesized Legal Finding</h3>
+            <div class="answer-content-text" id="resAnswerText"></div>
+            <div class="abstention-box hidden" id="resAbstentionNotice">
+              <div class="abstention-icon">⚠️</div>
+              <div class="abstention-body">
+                <strong>Abstention Notice:</strong>
+                <p id="resAbstentionReason"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grounded Citations & Evidence Explorer -->
+        <div class="citations-container" id="citationsContainer">
+          <div class="citations-header-row">
+            <h3 class="citations-title">Grounded Evidence & Source Passages</h3>
+            <span class="citations-subtitle">Verbatim document excerpts supporting this finding with page-level anchors</span>
+          </div>
+          <div class="citation-deck" id="citationsDeck">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Indexed Corpus Modal Drawer -->
+  <div id="corpusModal" class="modal-backdrop hidden" onclick="closeCorpusModal(event)">
+    <div class="modal-sheet corpus-sheet" onclick="event.stopPropagation()">
+      <div class="sheet-header">
+        <div class="sheet-title-group">
+          <span class="sheet-pretitle">KNOWLEDGE REPOSITORY</span>
+          <h3 class="sheet-title">Indexed Legal Document Corpus</h3>
+        </div>
+        <button class="sheet-close-btn" onclick="closeCorpusModal()">✕</button>
+      </div>
+      <div class="sheet-body">
+        <p class="modal-desc">5 multi-page commercial legal agreements indexed into ChromaDB with semantic embeddings and RBAC clearance tags:</p>
+        <div class="corpus-table-wrap">
+          <table class="corpus-table">
+            <thead>
+              <tr>
+                <th>Document Title</th>
+                <th>Category</th>
+                <th>Clearance Tier</th>
+                <th>Pages</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="corpusTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
